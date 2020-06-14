@@ -4,7 +4,7 @@ New Interface for mStream.
 For more information about mStream checkout the original repository: https://github.com/IrosTheBeggar/mStream
 
 ## Desktop UI
-![](/git_img/dekstop.gif)
+![](/git_img/desktop.gif)
 
 ## Mobile UI
 ![](/git_img/mobile.gif)

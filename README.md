@@ -1,127 +1,32 @@
-# mStream
+# mStream interface mod
 
-### [Check Out The Demo!](https://demo.mstream.io/)
+New Interface for mStream. 
+For more information about mStream checkout the original repository: https://github.com/IrosTheBeggar/mStream
 
-mStream is a personal music streaming server.  You can use mStream to stream your music from your home computer to any device, anywhere.
-Test
+### Changes
+* remmoved inline CSS and sorted all styles in SASS
+* 2 complete new UI's. One for destop usage, One for mobile usage
+* build up on Bootstrap
+* use updated librarys (i.e howler.js)
+* stock icons replaced by materialdesignicons.com
+* extended Jukebox controls (seek,volume)
+* a lot of other things
 
-### Server Features
-* Works Cross Platform. Tested on Windows, OSX, Ubuntu, Arch, and Raspbian
-* Light on memory and CPU
-* Tested on multi-terabyte libraries
-* Runs on ARM board like the Raspberry Pi
+### Version: 0.1.0
+* Initial Release. Alpha testing stage.
+* expect Bug's, Glitches and more!
+* it's in daily usage by myself -> I fix bugs as soon as I see them
+* Feel free to open issues if you found a bug or have other UI improvement suggestions.
 
-### WebApp Features
-* Gapless Playback
-* Milkdrop Visualizer
-* Playlist Sharing
-* Upload Files through the file explorer
-* AutoDJ - Queues up random songs
 
-### Mobile App Features
-* [Available on Google Play](https://play.google.com/store/apps/details?id=mstream.music)
-* Easily syncs music to your phone for offline playback
-* Multi server support
-* Coming soon to iOS
+### TODO
+* small position changes of some elements
+* get completely rid of izi
+* style all buttons
+* figure out a way to navigate back in albums / artists / playlists (only on mobile)
+* find the best style and place for every single thing, so expect moves of buttons, texts, icons, menus, etc.
+* more code cleaning / modularization for better maintenance capability
 
-![mStream Web App](/public/img/designs/mstreamv4.png?raw=true)
-
-## Install mStream Binaries for Win/OSX/Linux
-
-### [Download the latest versions from our release page](https://github.com/IrosTheBeggar/mStream/releases)
-
-This is the easiest way to install mStream:
-
-* Has no dependencies
-* Auto boots server on startup
-* Comes with GUI tools for server configuration and management
-
-## Install mStream with Docker
-
-[LinuxServer.io](https://www.linuxserver.io/) have produced a multiarch Alpine container for mStream for `x86-64`, `arm64` & `armhf` which is rebuilt automatically with any base image package updates or new releases of mStream and features persistent database and album images, and the possibility of advanced usage by editing `config.json` directly.
-
-Simply pulling `linuxserver/mstream` should retrieve the correct image for your arch, but you can also pull specific arch images or mStream releases via tags.
-
-See the readme for details on how to get up and running using docker or docker compose on either: 
-
-* [Github](https://github.com/linuxserver/docker-mstream) *or*
-* [Docker Hub](https://hub.docker.com/r/linuxserver/mstream)
-
-## Install mStream From The Command Line
-
-If you just want the core part of mStream without all the UI tools, you can install mStream from the NPM or Git repositories. 
-
-```shell
-# Install From Git
-git clone https://github.com/IrosTheBeggar/mStream.git
-cd mStream
-npm install
-sudo npm link 
-
-# To update mStream just pull from git and reboot the server
-git pull
-```
-
-You can also install mStream through npm with `npm install -g mstream`. This is not recommended since some OSes (like Ubuntu) require sudo to do this.
-
-## Configuring and Booting
-
-mStream can be configured with a JSON file that is loaded on boot. You can use the built in wizard to manage this file or [read the docs on how to edit it by hand.](docs/json_config.md)
-
-```shell
-# Brings up an interactive shell program to edit all things in the config
-mstream --wizard /path/to/config.json
-
-# Boot mStream with the config file
-mstream -j /path/to/config.json
-```
-
-## Quick Test Configurations
-
-[Command line flags can be used to test different mStream configurations](docs/cli_arguments.md)
-
-```shell
-# the login system will be disabled if these values are not set
-mstream -u username -x password
-# set music directory
-mstream -m /path/to/music
-```
-
-## Federation
-
-mStream now supports Federation. Powered by [SyncThing](https://syncthing.net/).
-
-Federation lets you share directories with other mStream servers.  To federate a directory from a another server, you just need an invite token from that server.  To generate an invite you have two options:
-
-Public Invitation - A public invite token can be used by any device (before it expires).  Your mStream server needs to be available on a public domain name during the invitation process.
-
-Private Invitation - Every mStream server comes with a Federation ID.  You can generate a private invite if you have the Federation ID of the server you want to invite.  This method does not require your server to be publicly available.
-
-The Federation process one-way.  If you invite someone else, changes they make on their server will not be pushed to your server.  But changes you make will be pushed to to all servers you have invited.
-
-To use Federation you need to boot mStream with a config file.  This is because the Federation process will modify this file to manage directories and permissions.  You just need to add the following to the config file: 
-
-```
-federation: {
-    "folder": "/Users/username/federation"
-}
-```
-
-Without this, Federation will be disabled.
-
-## Technical Details
-
-* **Dependencies:** NodeJS v10 or greater
-
-* **Supported File Formats:** flac, mp3, mp4, wav, ogg, opus, aac, m4a
-
-## Contributing
-
-Interested in getting in contact?  [Check out our Discord channel](https://discordapp.com/channels/614134709248589845/614134709248589847)
-
-## The Docs
-
-[All the details about mStream are available in the docs folder](docs/)
 
 ## Credits
 
@@ -134,5 +39,11 @@ mStream is built on top some great open-source libraries:
 * [Butterchurn](https://github.com/jberg/butterchurn) - A clone of Milkdrop Visualizer written in JavaScript
 * [WebAmp](https://github.com/captbaritone/webamp) - A WinAmp clone that works in the browser
 
+additional libraries for this interface:
+* [Clusterize.js](https://github.com/NeXTs/Clusterize.js) - display large data sets in parts on mobile UI
+* [Slick](https://github.com/kenwheeler/slick/) - Swipe gestures on mobile UI
+* [noUiSlider](https://github.com/leongersen/noUiSlider) - Progress bar and volume slider
+* [simplebar](https://github.com/Grsmto/simplebar) - scrollbar replacement for styling
 
-And thanks to the [LinuxServer.io](https://www.linuxserver.io/) group for maintaining the Docker image!
+
+

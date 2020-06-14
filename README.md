@@ -4,13 +4,13 @@ New Interface for mStream.
 For more information about mStream checkout the original repository: https://github.com/IrosTheBeggar/mStream
 
 ### Changes
-* remmoved inline CSS and sorted all styles in SASS
+* remmoved inline CSS and sorted all styles in SASS (7in1 architecture) (WIP)
 * 2 complete new UI's. One for destop usage, One for mobile usage
 * build up on Bootstrap
 * use updated librarys (i.e howler.js)
 * stock icons replaced by materialdesignicons.com
 * extended Jukebox controls (seek,volume)
-* a lot of other things
+* a lot of other things (mediaSession API, animations, ...)
 
 ### Version: 0.1.0
 * Initial Release. Alpha testing stage.
@@ -20,12 +20,15 @@ For more information about mStream checkout the original repository: https://git
 
 
 ### TODO
+* fix sharing playlist
 * small position changes of some elements
 * get completely rid of izi
 * style all buttons
-* figure out a way to navigate back in albums / artists / playlists (only on mobile)
+* figure out a way to navigate back in albums / artists / playlists / search (only on mobile)
 * find the best style and place for every single thing, so expect moves of buttons, texts, icons, menus, etc.
 * more code cleaning / modularization for better maintenance capability
+* remove console.logs used for development
+* extend jukebox more
 
 
 ## Credits

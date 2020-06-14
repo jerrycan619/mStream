@@ -10,8 +10,8 @@ For more information about mStream checkout the original repository: https://git
 ![](/git_img/mobile.gif)
 
 ### Changes
-* remmoved inline CSS and sorted all styles in SASS (7in1 architecture) (WIP)
-* 2 complete new UI's. One for destop usage, One for mobile usage
+* removed inline CSS and sorted all styles in SASS (7in1 architecture) (WIP)
+* 2 complete new UI's. One for desktop usage, One for mobile usage
 * build up on Bootstrap
 * use updated librarys (i.e howler.js)
 * stock icons replaced by materialdesignicons.com

@@ -3,6 +3,12 @@
 New Interface for mStream. 
 For more information about mStream checkout the original repository: https://github.com/IrosTheBeggar/mStream
 
+## Desktop UI
+![](/git_img/dekstop.gif)
+
+## Mobile UI
+![](/git_img/mobile.gif)
+
 ### Changes
 * remmoved inline CSS and sorted all styles in SASS (7in1 architecture) (WIP)
 * 2 complete new UI's. One for destop usage, One for mobile usage

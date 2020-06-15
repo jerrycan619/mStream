@@ -88,6 +88,7 @@ var JUKEBOX = (function () {
       } catch (e) {
         return;
       }
+      console.log(json);
 
       // Handle Code
       if(json.code){
@@ -113,9 +114,37 @@ var JUKEBOX = (function () {
         MSTREAMPLAYER.previousSong();
         return;
       }
+      if( json.command === 'seekForward'){
+        MSTREAMPLAYER.goForwardSeek(json.value);
+        return;
+      }
+      if( json.command === 'seekBack'){
+        MSTREAMPLAYER.goBackSeek(json.value);
+        return;
+      }
       if( json.command === 'addSong' && json.file){
         MSTREAMAPI.addSongWizard(json.file, {}, true);
       }
+      if( json.command === 'setVolUp'){
+          const curVol = MSTREAMPLAYER.playerStats.volume;
+          if (curVol > 100 - json.value) {
+            MSTREAMPLAYER.changeVolume(100);
+          } else {
+            MSTREAMPLAYER.changeVolume(curVol + json.value);
+          }
+      }
+      if( json.command === 'setVolDown'){
+        const curVol = MSTREAMPLAYER.playerStats.volume;
+        if (curVol < json.value) {
+          MSTREAMPLAYER.changeVolume(0);
+        } else {
+          MSTREAMPLAYER.changeVolume(curVol - json.value);
+        }
+
+      }
+      // if( json.command === 'getPlaylist'){
+      //   return MSTREAMPLAYER.playlist;
+      // }
     };
   }
 

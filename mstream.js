@@ -14,6 +14,8 @@ const defaults = require('./modules/defaults.js');
 const ddns = require('./modules/ddns');
 const federation = require('./modules/federation');
 
+express
+
 exports.serveIt = config => {
   const program = defaults.setup(config);
 
@@ -48,11 +50,22 @@ exports.serveIt = config => {
     next();
   });
 
+  
+
   // Give access to public folder
   mstream.use('/public', express.static( program.webAppDirectory ));
   // Serve the webapp
   mstream.get('/', (req, res) => {
+    //if (device.device.type)
     res.sendFile('mstream.html', { root: program.webAppDirectory });
+  });
+  mstream.get('/desktop', (req, res) => {
+    //if (device.device.type)
+    res.sendFile('mstream_desktop.html', { root: program.webAppDirectory });
+  });
+  mstream.get('/mobile', (req, res) => {
+    //if (device.device.type)
+    res.sendFile('mstream_mobile.html', { root: program.webAppDirectory });
   });
   mstream.get('/j/*', (req, res) => {
     res.sendFile( 'mstream.html', { root: program.webAppDirectory });
@@ -65,9 +78,21 @@ exports.serveIt = config => {
   mstream.all('/shared/playlist/*', (req, res) => {
     res.sendFile( 'shared.html', { root: program.webAppDirectory });
   });
+  // Serve Shared Page
+  mstream.all('/shared/playlist_desktop/*', (req, res) => {
+    res.sendFile( 'shared_desktop.html', { root: program.webAppDirectory });
+  });
+  // Serve Shared Page
+  mstream.all('/shared/playlist_mobile/*', (req, res) => {
+    res.sendFile( 'shared_mobile.html', { root: program.webAppDirectory });
+  });
   // Serve Jukebox Page
-  mstream.all('/remote', (req, res) => {
-    res.sendFile('remote.html', { root: program.webAppDirectory });
+  mstream.all('/remote_desktop', (req, res) => {
+    res.sendFile('remote_desktop.html', { root: program.webAppDirectory });
+  });
+
+  mstream.all('/remote_mobile', (req, res) => {
+    res.sendFile('remote_mobile.html', { root: program.webAppDirectory });
   });
 
   // JukeBox

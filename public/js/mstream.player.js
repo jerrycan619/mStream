@@ -12,19 +12,21 @@ var MSTREAMPLAYER = (function () {
     navigator.mediaSession.setActionHandler('nexttrack', function() { goToNextSong(); });
   }
 
+  
+
   //Set (new) metadata in mediaSession
   var updateMediaSession_counter = 0;
   function updateMediaSession() {
     if ('mediaSession' in navigator) {
-
+      console.log("mediaSession Update");
       //console.log(mstreamModule.playerStats.metadata);
       //console.log(mstreamModule.playerStats.metadata.title);
       
       if (typeof mstreamModule.playerStats.metadata.title === "undefined" && updateMediaSession_counter < 10) {
 
         setTimeout(function() {
-          updateMediaSession_counter++;
           updateMediaSession();
+          updateMediaSession_counter++;
         }, 50);
 
       } else {
@@ -41,7 +43,7 @@ var MSTREAMPLAYER = (function () {
         if (!title) {
           const currentSong = MSTREAMPLAYER.getCurrentSong();
           const filepathArray = currentSong.filepath.split("/");
-          title = filepathArray[filepathArray.length - 1];
+          title = filepathArray[filepathArray.length - 1]
         }
 
         if (!artist) {artist = '';}
@@ -64,6 +66,30 @@ var MSTREAMPLAYER = (function () {
     }
   }
 
+  //Lastfm - Scrobble after conditions met and updateNowPlaying
+  //Wait 1sec to prevent from spamming lastfm while fast skipping tracks
+  function updateLastfm() {
+    clearTimeout(scrobbleTimer);
+    clearTimeout(scrobbleTimer2);
+    scrobbleTimer = setTimeout(function () {
+      mstreamModule.updateNowPlaying();
+      const duration = Math.round(mstreamModule.playerStats.duration);
+      //First condition: The track must be longer than 30 seconds!
+      if (duration > 30) {                        
+        //Second condition: the track has been played for at least half its duration, or for 4 minutes (240s) (whichever occurs earlier.)
+        if (duration/2 <= 240) {
+          scrobbleTimer2 = setTimeout(function () {
+            mstreamModule.scrobble();
+          }, duration/2*1000);
+        } else {
+          scrobbleTimer2 = setTimeout(function () {
+            mstreamModule.scrobble();
+          }, 240*1000);
+        }
+      } 
+    }, 1000);
+  }
+
   // Playlist variables
   mstreamModule.positionCache = { val: -1 };
   mstreamModule.playlist = [];
@@ -71,11 +97,30 @@ var MSTREAMPLAYER = (function () {
 
   mstreamModule.editSongMetadata = function (key, value, songIndex) {
     for (var i = 0, len = mstreamModule.playlist.length; i < len; i++) {
-      if ((mstreamModule.playlist[i].metadata && mstreamModule.playlist[i].metadata.hash === mstreamModule.playlist[songIndex].metadata.hash) || mstreamModule.playlist[i].filepath === mstreamModule.playlist[songIndex].filepath) {
+      if (
+        (mstreamModule.playlist[i].metadata &&
+          mstreamModule.playlist[i].metadata.hash ===
+            mstreamModule.playlist[songIndex].metadata.hash) ||
+        mstreamModule.playlist[i].filepath ===
+          mstreamModule.playlist[songIndex].filepath
+      ) {
         mstreamModule.playlist[i].metadata[key] = value;
       }
     }
-  }
+  };
+
+  mstreamModule.getState = function (newVolume) {
+    var localPlayerObject = getCurrentPlayer();
+    var otherPlayerObject = getOtherPlayer();
+
+    if (localPlayerObject && localPlayerObject.playerObject) {
+      return localPlayerObject.playerObject.state();
+    }
+
+    if (otherPlayerObject && otherPlayerObject.playerObject) {
+      otherPlayerObject.playerObject.state();
+    }
+  };
 
   mstreamModule.changeVolume = function (newVolume) {
     if (isNaN(newVolume) || newVolume < 0 || newVolume > 100) {
@@ -93,14 +138,23 @@ var MSTREAMPLAYER = (function () {
     if (otherPlayerObject && otherPlayerObject.playerObject) {
       otherPlayerObject.playerObject.volume(newVolume / 100);
     }
-  }
+    //console.log(newVolume);
+    //localStorage.setItem("volume", newVolume);
+  };
 
   // Scrobble function
   // This is a placeholder function that the API layer can take hold of to implement the scrobble call
-  var scrobbleTimer;
+  var scrobbleTimer2;
   mstreamModule.scrobble = function () {
     return false;
-  }
+  };
+
+  // update now playing function
+  // This is a placeholder function that the API layer can take hold of to implement the scrobble call
+  var scrobbleTimer;
+  mstreamModule.updateNowPlaying = function () {
+    return false;
+  };
 
   // The audioData looks like this
   // var song = {
@@ -121,13 +175,13 @@ var MSTREAMPLAYER = (function () {
     }
 
     return addSongToPlaylist(audioData);
-  }
+  };
 
   mstreamModule.getRandomSong = function (callback) {
     const params = {
       ignoreList: autoDjIgnoreArray,
       minRating: mstreamModule.minRating,
-      ignoreVPaths: mstreamModule.ignoreVPaths
+      ignoreVPaths: mstreamModule.ignoreVPaths,
     };
 
     MSTREAMAPI.getRandomSong(params, function (res, err) {
@@ -140,7 +194,7 @@ var MSTREAMPLAYER = (function () {
       autoDjIgnoreArray = res.ignoreList;
       callback(firstSong, null);
     });
-  }
+  };
 
   function autoDJ() {
     // Call mStream API for random song
@@ -148,10 +202,10 @@ var MSTREAMPLAYER = (function () {
       if (err) {
         mstreamModule.playerStats.autoDJ = false;
         iziToast.warning({
-          title: 'Auto DJ Failed',
-          message: err.responseJSON.error ? err.responseJSON.error  : '',
-          position: 'topCenter',
-          timeout: 3500
+          title: "Auto DJ Failed",
+          message: err.responseJSON.error ? err.responseJSON.error : "",
+          position: "topCenter",
+          timeout: 3500,
         });
         return;
       }
@@ -166,8 +220,14 @@ var MSTREAMPLAYER = (function () {
 
     // If this the first song in the list
     if (mstreamModule.playlist.length === 1) {
-      mstreamModule.positionCache.val = 0;
-      return goToSong(mstreamModule.positionCache.val);
+      if(localStorage.getItem("autoPlay") !== "false") {
+        console.log("AutoPlay enabled. Play first song");
+        mstreamModule.positionCache.val = 0;
+        return goToSong(mstreamModule.positionCache.val);
+      } else {
+        console.log("AutoPlay disabled. dont play first song");
+      }
+      
     }
 
     // TODO: Check if we are at the end of the playlist and nothing is playing.
@@ -181,10 +241,14 @@ var MSTREAMPLAYER = (function () {
     // }
 
     // Cache song if appropriate
-    if ((!cacheTimer) && mstreamModule.playlist.length > mstreamModule.positionCache.val + 1 && mstreamModule.positionCache.val === mstreamModule.playlist.length -2) {
+    if (
+      !cacheTimer &&
+      mstreamModule.playlist.length > mstreamModule.positionCache.val + 1 &&
+      mstreamModule.positionCache.val === mstreamModule.playlist.length - 2
+    ) {
       clearTimeout(cacheTimer);
-      cacheTimer = setTimeout(function () { 
-        setCachedSong(mstreamModule.positionCache.val + 1); 
+      cacheTimer = setTimeout(function () {
+        setCachedSong(mstreamModule.positionCache.val + 1);
         cacheTimer = undefined;
       }, cacheTimeout);
     }
@@ -192,15 +256,16 @@ var MSTREAMPLAYER = (function () {
     return true;
   }
 
-
   mstreamModule.clearAndPlay = function (song) {
     // Clear playlist
     mstreamModule.playlist = [];
     return addSong(song);
-  }
+  };
 
   mstreamModule.clearPlaylist = function () {
-    while (mstreamModule.playlist.length > 0) { mstreamModule.playlist.pop(); }
+    while (mstreamModule.playlist.length > 0) {
+      mstreamModule.playlist.pop();
+    }
     mstreamModule.positionCache.val = -1;
 
     clearEnd();
@@ -208,7 +273,9 @@ var MSTREAMPLAYER = (function () {
     // Clear shuffle as well
     if (mstreamModule.playerStats.shuffle === true) {
       // Clear Shuffle Cache
-      while (shuffleCache.length > 0) { shuffleCache.pop(); }
+      while (shuffleCache.length > 0) {
+        shuffleCache.pop();
+      }
     }
 
     if (mstreamModule.playerStats.autoDJ === true) {
@@ -216,19 +283,18 @@ var MSTREAMPLAYER = (function () {
     }
 
     return true;
-  }
+  };
 
   mstreamModule.nextSong = function () {
     // Stop the current song
     return goToNextSong();
-  }
+  };
   mstreamModule.previousSong = function () {
     return goToPreviousSong();
-  }
-
+  };
 
   mstreamModule.goToSongAtPosition = function (position) {
-    console.log('GO GO GOG O')
+    console.log("GO GO GOG O");
     if (!mstreamModule.playlist[position]) {
       return false;
     }
@@ -237,7 +303,7 @@ var MSTREAMPLAYER = (function () {
 
     mstreamModule.positionCache.val = position;
     return goToSong(mstreamModule.positionCache.val);
-  }
+  };
 
   mstreamModule.removeSongAtPosition = function (position, sanityCheckUrl) {
     // Check that position is filled
@@ -245,7 +311,10 @@ var MSTREAMPLAYER = (function () {
       return false;
     }
     // If sanityCheckUrl, check that url are the same
-    if (sanityCheckUrl && sanityCheckUrl != mstreamModule.playlist[position].url) {
+    if (
+      sanityCheckUrl &&
+      sanityCheckUrl != mstreamModule.playlist[position].url
+    ) {
       return false;
     }
 
@@ -271,18 +340,24 @@ var MSTREAMPLAYER = (function () {
     }
 
     // Handle case where user removes current song and it's the last song in the playlist
-    if (position === mstreamModule.positionCache.val && position === mstreamModule.playlist.length) {
+    if (
+      position === mstreamModule.positionCache.val &&
+      position === mstreamModule.playlist.length
+    ) {
       clearEnd();
       // Go to random song if random is set
       if (mstreamModule.playerStats.shuffle === true) {
         goToNextSong();
-      } else if (mstreamModule.playerStats.shouldLoop === true) { // loop is set
+      } else if (mstreamModule.playerStats.shouldLoop === true) {
+        // loop is set
         mstreamModule.positionCache.val = 0;
         goToSong(mstreamModule.positionCache.val);
-      } else { // Reset to start is nothing is set
+      } else {
+        // Reset to start is nothing is set
         mstreamModule.positionCache.val = -1;
       }
-    } else if (position === mstreamModule.positionCache.val) { // User removes currently playing song
+    } else if (position === mstreamModule.positionCache.val) {
+      // User removes currently playing song
       // Go to next song
       clearEnd();
 
@@ -292,20 +367,22 @@ var MSTREAMPLAYER = (function () {
       } else {
         goToSong(mstreamModule.positionCache.val);
       }
-
     } else if (position < mstreamModule.positionCache.val) {
       // Lower position cache by 1 if necessary
       mstreamModule.positionCache.val--;
-    } else if (position === (mstreamModule.positionCache.val + 1)) {
-      if(mstreamModule.positionCache.val === (mstreamModule.playlist.length - 1) && mstreamModule.playerStats.autoDJ === true) {
-          autoDJ();
+    } else if (position === mstreamModule.positionCache.val + 1) {
+      if (
+        mstreamModule.positionCache.val === mstreamModule.playlist.length - 1 &&
+        mstreamModule.playerStats.autoDJ === true
+      ) {
+        autoDJ();
       }
 
       // If the next song is removed, reset cache
       clearTimeout(cacheTimer);
       cacheTimer = setTimeout(function () {
         cacheTimer = undefined;
-        if(mstreamModule.playerStats.shuffle === true) {
+        if (mstreamModule.playerStats.shuffle === true) {
           // TODO: This doesn't actually get triggered if remove the next shuffle song
           // if(shuffleCache[0]) {
           //   for (var i = 0; i < mstreamModule.playlist.length; i++) {
@@ -316,23 +393,25 @@ var MSTREAMPLAYER = (function () {
           //   }
           // }
         } else if (mstreamModule.playerStats.shouldLoop === true) {
-          if (mstreamModule.positionCache.val === (mstreamModule.playlist.length - 1)) {
+          if (
+            mstreamModule.positionCache.val ===
+            mstreamModule.playlist.length - 1
+          ) {
             setCachedSong(0);
-          }  else {
+          } else {
             setCachedSong(mstreamModule.positionCache.val + 1);
           }
         } else {
           setCachedSong(mstreamModule.positionCache.val + 1);
         }
-  
       }, cacheTimeout);
     }
-  }
+  };
 
   mstreamModule.getCurrentSong = function () {
     var lPlayer = getCurrentPlayer();
     return lPlayer.songObject;
-  }
+  };
 
   function goToPreviousSong() {
     // If random is set, go to previous song from cache
@@ -380,7 +459,7 @@ var MSTREAMPLAYER = (function () {
 
       // Prevent same song from playing twice after a re-shuffle
       if (nextSong === mstreamModule.getCurrentSong()) {
-        console.log('DUPEEEEE');
+        console.log("DUPEEEEE");
         shuffleCache.unshift(nextSong);
         nextSong = shuffleCache.pop();
       }
@@ -415,7 +494,10 @@ var MSTREAMPLAYER = (function () {
     // Check if the next song exists
     if (!mstreamModule.playlist[mstreamModule.positionCache.val + 1]) {
       // If loop is set and no other song, go back to first song
-      if (mstreamModule.playerStats.shouldLoop === true && mstreamModule.playlist.length > 0) {
+      if (
+        mstreamModule.playerStats.shouldLoop === true &&
+        mstreamModule.playlist.length > 0
+      ) {
         mstreamModule.positionCache.val = 0;
         clearEnd();
 
@@ -430,11 +512,20 @@ var MSTREAMPLAYER = (function () {
     return goToSong(mstreamModule.positionCache.val);
   }
 
-
   function getCurrentPlayer() {
-    if (curP === 'A') {
+    if (curP === "A") {
       return playerA;
-    } else if (curP === 'B') {
+    } else if (curP === "B") {
+      return playerB;
+    }
+
+    return false;
+  }
+
+  mstreamModule.getCurrentPlayer = function() {
+    if (curP === "A") {
+      return playerA;
+    } else if (curP === "B") {
       return playerB;
     }
 
@@ -442,9 +533,9 @@ var MSTREAMPLAYER = (function () {
   }
 
   function getOtherPlayer() {
-    if (curP === 'A') {
+    if (curP === "A") {
       return playerB;
-    } else if (curP === 'B') {
+    } else if (curP === "B") {
       return playerA;
     }
 
@@ -452,22 +543,25 @@ var MSTREAMPLAYER = (function () {
   }
 
   function flipFlop() {
-    if (curP === 'A') {
-      curP = 'B';
-    } else if (curP === 'B') {
-      curP = 'A';
+    if (curP === "A") {
+      curP = "B";
+    } else if (curP === "B") {
+      curP = "A";
     }
 
     return curP;
   }
 
-
   function goToSong(position) {
+    console.log("gotosong");
     if (!mstreamModule.playlist[position]) {
       return false;
     }
 
-    if (mstreamModule.playerStats.autoDJ === true && position === mstreamModule.playlist.length - 1) {
+    if (
+      mstreamModule.playerStats.autoDJ === true &&
+      position === mstreamModule.playlist.length - 1
+    ) {
       autoDJ();
     }
 
@@ -480,7 +574,7 @@ var MSTREAMPLAYER = (function () {
 
     // Stop the current song
     // TODO: Handle situation where next song is same as current song
-    if (localPlayerObject.playerType === 'howler') {
+    if (localPlayerObject.playerType === "howler") {
       localPlayerObject.playerObject.unload();
     }
 
@@ -501,21 +595,38 @@ var MSTREAMPLAYER = (function () {
       mstreamModule.resetCurrentMetadata();
     }
 
+    const currentSong = MSTREAMPLAYER.getCurrentSong();
+    mstreamModule.playerStats.metadata.filepath = currentSong.filepath;
+
+    mstreamModule.playerStats.loading = true;
+    //updateMediaSession();
+
+    //Start LastFM update (nowplaying + scrobble)
+    lPlayer.playerObject.once("play", function() {
+      updateLastfm();
+    })
+    
     updateMediaSession();
 
     // connect to visualizer
     if (VIZ) {
-      var audioCtx =  VIZ.get();
-      var analyser = audioCtx.createAnalyser();
+      var audioCtx = VIZ.get();
       try {
-        var source = audioCtx.createMediaElementSource(lPlayer.playerObject._sounds[0]._node);
-        source.connect(analyser);
-        source.connect(audioCtx.destination);
-        VIZ.connect(analyser);
-      } catch( err) {
-        console.log(err)
+        var audioNode = lPlayer.playerObject._sounds[0]._node;
+        if (!audioNode.previouslyConnectedViz) {
+          var analyser = audioCtx.createAnalyser();
+          var source = audioCtx.createMediaElementSource(audioNode);
+          source.connect(analyser);
+          source.connect(audioCtx.destination);
+          VIZ.connect(analyser);
+          audioNode.previouslyConnectedViz = true;
+        }
+      } catch (err) {
+        console.log(err);
       }
     }
+
+    
 
     // TODO: This is a mess, figure out a better way
     var newOtherPlayerObject = getOtherPlayer();
@@ -528,33 +639,31 @@ var MSTREAMPLAYER = (function () {
     clearTimeout(cacheTimer);
     cacheTimer = setTimeout(function () {
       cacheTimer = undefined;
-      if(mstreamModule.playerStats.shuffle === true) {
-        if(shuffleCache[0]) {
+      if (mstreamModule.playerStats.shuffle === true) {
+        if (shuffleCache[0]) {
           for (var i = 0; i < mstreamModule.playlist.length; i++) {
-            if(mstreamModule.playlist[i] === shuffleCache[shuffleCache.length - 1]) {
+            if (
+              mstreamModule.playlist[i] ===
+              shuffleCache[shuffleCache.length - 1]
+            ) {
               setCachedSong(i);
               break;
             }
           }
         }
       } else if (mstreamModule.playerStats.shouldLoop === true) {
-        if (position === (mstreamModule.playlist.length - 1)) {
+        if (position === mstreamModule.playlist.length - 1) {
           setCachedSong(0);
-        }  else {
+        } else {
           setCachedSong(position + 1);
         }
       } else {
         setCachedSong(position + 1);
       }
-
     }, cacheTimeout);
 
-    // Scrobble song after 30 seconds
-    clearTimeout(scrobbleTimer);
-    scrobbleTimer = setTimeout(function () { mstreamModule.scrobble() }, 30000);
     return true;
   }
-
 
   mstreamModule.resetCurrentMetadata = function () {
     var lPlayer = getCurrentPlayer();
@@ -565,10 +674,10 @@ var MSTREAMPLAYER = (function () {
       mstreamModule.playerStats.metadata.track = curSong.metadata.track;
       mstreamModule.playerStats.metadata.title = curSong.metadata.title;
       mstreamModule.playerStats.metadata.year = curSong.metadata.year;
-      mstreamModule.playerStats.metadata['album-art'] = curSong.metadata['album-art'];
+      mstreamModule.playerStats.metadata["album-art"] =
+        curSong.metadata["album-art"];
     }
-  }
-
+  };
 
   mstreamModule.resetPositionCache = function () {
     var len;
@@ -586,7 +695,7 @@ var MSTREAMPLAYER = (function () {
 
     // No song found, reset
     mstreamModule.positionCache.val = -1;
-  }
+  };
 
   // ========================= Howler Player ===============
   function howlPlayerPlay() {
@@ -615,11 +724,10 @@ var MSTREAMPLAYER = (function () {
   }
   // ========================================================
 
-
   function clearEnd() {
     var localPlayer = getCurrentPlayer();
-    if (localPlayer.playerType === 'howler') {
-      localPlayer.playerObject.off('end');
+    if (localPlayer.playerType === "howler") {
+      localPlayer.playerObject.off("end");
     }
   }
 
@@ -630,15 +738,15 @@ var MSTREAMPLAYER = (function () {
   mstreamModule.playPause = function () {
     var localPlayer = getCurrentPlayer();
 
-    if (localPlayer.playerType === 'howler') {
+    if (localPlayer.playerType === "howler") {
       return howlPlayerPlayPause();
     }
-  }
+  };
 
   mstreamModule.changePlaybackRate = function (newRate) {
     newRate = Number(newRate);
     if (isNaN(newRate) || newRate > 10 || newRate < 0.1) {
-      console.log('Bad New Rate');
+      console.log("Bad New Rate");
       return;
     }
 
@@ -653,46 +761,49 @@ var MSTREAMPLAYER = (function () {
     if (oPlayer && oPlayer.playerObject) {
       oPlayer.playerObject.rate(newRate);
     }
-  }
+  };
 
   mstreamModule.playerStats = {
     playbackRate: 1,
     duration: 0,
     currentTime: 0,
     playing: false,
+    loading: false,
     // repeat: false,
     shuffle: false,
     volume: 100,
     metadata: {
-      "artist": false,
-      "album": false,
-      "track": false,
-      "title": false,
-      "year": false,
+      artist: false,
+      album: false,
+      track: false,
+      title: false,
+      year: false,
       "album-art": false,
-      "filepath": false,
-    }
-  }
+      filepath: false,
+    },
+  };
 
   var playerA = {
     playerType: false,
     playerObject: false,
-    songObject: false
-  }
+    songObject: false,
+  };
   var playerB = {
     playerType: false,
     playerObject: false,
-    songObject: false
-  }
+    songObject: false,
+  };
 
-  var curP = 'A';
+  var curP = "A";
 
   function setMedia(song, player, play) {
-    player.playerType = 'howler';
-    
+    console.log("setmedia called");
+
+    player.playerType = "howler";
+
     player.playerObject = new Howl({
       src: [song.url],
-      volume: mstreamModule.playerStats.volume/100,
+      volume: mstreamModule.playerStats.volume / 100,
       rate: mstreamModule.playerStats.playbackRate,
       html5: true, // Force to HTML5.  Otherwise streaming will suck
       // onplay: function() {        },
@@ -705,6 +816,7 @@ var MSTREAMPLAYER = (function () {
       onpause: function () {
         //Feedback for player to change icon
         mstreamModule.playerStats.playing = false;
+        mstreamModule.playerStats.loading = false;
 
         //Feeback for Mediasession
         if ('mediaSession' in navigator) {
@@ -714,55 +826,65 @@ var MSTREAMPLAYER = (function () {
       onstop: function () {
         //Feedback for player to change icon
         mstreamModule.playerStats.playing = false;
+
+        //Don't scrobble on stop if not already scrobbled
+        clearTimeout(scrobbleTimer);
+        clearTimeout(scrobbleTimer2);
       },
       onplay: function () {
         //Feedback for player to change icon
         mstreamModule.playerStats.playing = true;
+        mstreamModule.playerStats.loading = false;
 
         //Feeback for Mediasession
         if ('mediaSession' in navigator) {
           navigator.mediaSession.playbackState = "playing";
         }
+
+        if (mstreamModule.playerStats.shuffle && mstreamModule.playerStats.shuffleOnce) {
+          mstreamModule.playerStats.shuffleOnce = false;
+          goToNextSong();
+        }
       },
-      onplayerror: function() {
-        console.log('PLAY ERROR');
+      onplayerror: function () {
+        console.log("PLAY ERROR");
         // TODO: need to differentiate between real errors and mobile bullshit
         // sound.once('unlock', function() {
         //   sound.play();
         // });
       },
-      onloaderror: function() {
+      onloaderror: function () {
         // Mark Song As Error
-        console.log('SONG ERROR')
+        console.log("SONG ERROR");
         song.error = true;
         if (iziToast) {
           iziToast.error({
-            title: 'Failed To Play Song',
-            position: 'topCenter',
-            timeout: 3500
+            title: "Failed To Play Song",
+            position: "topCenter",
+            timeout: 3500,
           });
         }
 
         var currentPlayer = getCurrentPlayer();
         if (player === currentPlayer) {
           goToNextSong();
-        }else {
+        } else {
           // Invalidate cache
           var newOtherPlayerObject = getOtherPlayer();
           newOtherPlayerObject.playerType = false;
           newOtherPlayerObject.playerObject = false;
           newOtherPlayerObject.songObject = false;
         }
-      }
+      },
     });
+    
 
     if (play == true) {
       howlPlayerPlay();
     }
-    
+
     player.songObject = song;
   }
-
 
   function callMeOnStreamEnd() {
     mstreamModule.playerStats.playing = false;
@@ -770,7 +892,7 @@ var MSTREAMPLAYER = (function () {
     goToNextSong();
   }
 
-  mstreamModule.goBackSeek = function(backBy) {
+  mstreamModule.goBackSeek = function (backBy) {
     var lPlayer = getCurrentPlayer();
     var seekTo = lPlayer.playerObject.seek() - backBy;
     if (seekTo < 0) {
@@ -778,55 +900,58 @@ var MSTREAMPLAYER = (function () {
     }
 
     lPlayer.playerObject.seek(seekTo);
-  }
+  };
 
-  mstreamModule.goForwardSeek = function(forwardBy) {
+  mstreamModule.goForwardSeek = function (forwardBy) {
     var lPlayer = getCurrentPlayer();
-    if (lPlayer.playerObject.seek() > (lPlayer.playerObject._duration - 5) ) {
+    if (lPlayer.playerObject.seek() > lPlayer.playerObject._duration - 5) {
       return;
     }
 
     var seekTo = lPlayer.playerObject.seek() + forwardBy;
-    if (seekTo >  (lPlayer.playerObject._duration - 5)) {
+    if (seekTo > lPlayer.playerObject._duration - 5) {
       seekTo = lPlayer.playerObject._duration - 5;
     }
 
     lPlayer.playerObject.seek(seekTo);
-  }
+  };
 
   // NOTE: Seektime is in seconds
   mstreamModule.seek = function (seekTime) {
-    var lPlayer = getCurrentPlayer( );
-    if (lPlayer.playerType === 'howler') {
+    var lPlayer = getCurrentPlayer();
+    if (lPlayer.playerType === "howler") {
       // Check that the seek number is less than the duration
       if (seekTime < 0 || seekTime > lPlayer.playerObject._duration) {
         return false;
       }
-      lPlayer.playerObject.seek(seektime)
+      lPlayer.playerObject.seek(seektime);
     }
-  }
+  };
 
   mstreamModule.seekByPercentage = function (percentage) {
     if (percentage < 0 || percentage > 99) {
       return false;
     }
+    console.log("seekByPercentage");
 
     var lPlayer = getCurrentPlayer();
-    if (lPlayer.playerType === 'howler') {
+    if (lPlayer.playerType === "howler") {
       var seektime = (percentage * lPlayer.playerObject._duration) / 100;
       lPlayer.playerObject.seek(seektime);
     }
-  }
+  };
 
   var timers = {};
   startTime(100);
   function startTime(interval) {
-    if (timers.sliderUpdateInterval) { clearInterval(timers.sliderUpdateInterval); }
+    if (timers.sliderUpdateInterval) {
+      clearInterval(timers.sliderUpdateInterval);
+    }
 
     timers.sliderUpdateInterval = setInterval(function () {
       var lPlayer = getCurrentPlayer();
 
-      if (lPlayer.playerType === 'howler') {
+      if (lPlayer.playerType === "howler") {
         mstreamModule.playerStats.currentTime = lPlayer.playerObject.seek();
         mstreamModule.playerStats.duration = lPlayer.playerObject._duration;
       } else {
@@ -854,11 +979,10 @@ var MSTREAMPLAYER = (function () {
     return true;
   }
 
-
   // Loop
   mstreamModule.playerStats.shouldLoop = false;
   mstreamModule.setRepeat = function (newValue) {
-    if (typeof (newValue) != "boolean") {
+    if (typeof newValue != "boolean") {
       return false;
     }
     if (mstreamModule.playerStats.autoDJ === true) {
@@ -867,22 +991,23 @@ var MSTREAMPLAYER = (function () {
     }
     mstreamModule.playerStats.shouldLoop = newValue;
     return newValue;
-  }
+  };
   mstreamModule.toggleRepeat = function () {
     if (mstreamModule.playerStats.autoDJ === true) {
       mstreamModule.playerStats.shouldLoop = false;
       return false;
     }
-    mstreamModule.playerStats.shouldLoop = !mstreamModule.playerStats.shouldLoop;
+    mstreamModule.playerStats.shouldLoop = !mstreamModule.playerStats
+      .shouldLoop;
     return mstreamModule.playerStats.shouldLoop;
-  }
+  };
 
   // Random Song
   mstreamModule.playerStats.shuffle = false;
   var shuffleCache = []; // Cache the last 5 songs played to avoid repeats
   var shufflePrevious = [];
   mstreamModule.setShuffle = function (newValue) {
-    if (typeof (newValue) != "boolean") {
+    if (typeof newValue != "boolean") {
       return false;
     }
     if (mstreamModule.playerStats.autoDJ === true) {
@@ -898,8 +1023,8 @@ var MSTREAMPLAYER = (function () {
 
     mstreamModule.playerStats.shuffle = newValue;
     return true;
-  }
-  
+  };
+
   mstreamModule.toggleShuffle = function () {
     if (mstreamModule.playerStats.autoDJ === true) {
       mstreamModule.playerStats.shuffle = false;
@@ -908,14 +1033,22 @@ var MSTREAMPLAYER = (function () {
     mstreamModule.playerStats.shuffle = !mstreamModule.playerStats.shuffle;
     if (mstreamModule.playerStats.shuffle === true) {
       newShuffle();
+      mstreamModule.playerStats.shuffleOnce = true;
     } else {
       turnShuffleOff();
     }
     return mstreamModule.playerStats.shuffle;
-  }
+  };
 
   function newShuffle() {
     shuffleCache = shuffle(mstreamModule.playlist.slice(0));
+    /*const lPlayer = getCurrentPlayer();
+    if (lPlayer.playerObject !== false) {
+      lPlayer.playerObject.once("play", function() {
+        goToNextSong();
+      });
+    }*/
+    
   }
 
   function turnShuffleOff() {
@@ -924,10 +1057,9 @@ var MSTREAMPLAYER = (function () {
   }
 
   function shuffle(array) {
-    var currentIndex = array.length
-      , temporaryValue
-      , randomIndex
-      ;
+    var currentIndex = array.length,
+      temporaryValue,
+      randomIndex;
 
     // While there remain elements to shuffle...
     while (0 !== currentIndex) {
@@ -947,8 +1079,23 @@ var MSTREAMPLAYER = (function () {
   // AutoDJ
   mstreamModule.playerStats.autoDJ = false;
   var autoDjIgnoreArray = [];
+
+  // Setup ignoreVPath from local Storage if any
   mstreamModule.ignoreVPaths = {};
+  let autodjIgnorePaths = localStorage.getItem('autoDJ-ignorePaths');
+  if (autodjIgnorePaths) {
+    autodjIgnorePaths = autodjIgnorePaths.split(',');
+    $.each(autodjIgnorePaths, function( index, value ) {
+      mstreamModule.ignoreVPaths[value] = true;
+    });
+  }
+
+  //Setup up minRating from local Storage if set
+  const minRating = localStorage.getItem('autoDJ-minRating');
   mstreamModule.minRating = 0;
+  if (minRating) {
+    mstreamModule.minRating = minRating;
+  }
 
   mstreamModule.toggleAutoDJ = function () {
     mstreamModule.playerStats.autoDJ = !mstreamModule.playerStats.autoDJ;
@@ -958,14 +1105,17 @@ var MSTREAMPLAYER = (function () {
       mstreamModule.playerStats.shouldLoop = false;
 
       // Add song if necessary
-      if (mstreamModule.playlist.length === 0 || mstreamModule.positionCache.val === mstreamModule.playlist.length - 1) {
+      if (
+        mstreamModule.playlist.length === 0 ||
+        mstreamModule.positionCache.val === mstreamModule.playlist.length - 1
+      ) {
         autoDJ();
       }
     }
 
     return mstreamModule.playerStats.autoDJ;
-  }
+  };
 
   // Return an object that is assigned to Module
   return mstreamModule;
-}());
+})();

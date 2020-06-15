@@ -22,7 +22,7 @@ const mapFunDefault = function(left, right) {
     track: left.track,
     title: left.title,
     year: left.year,
-    'album-art': left.aaFile,
+    aaFile: left.aaFile,
     filepath: left.filepath,
     rating: right.rating,
     vpath: left.vpath
@@ -389,6 +389,8 @@ exports.setup = function (mstream, program) {
       }
     }
 
+    //console.log("orClause: ", orClause);
+
     const results = fileCollection.find(orClause);
     const store = {};
     for (let row of results) {
@@ -457,7 +459,7 @@ exports.setup = function (mstream, program) {
   });
 
   mstream.post('/db/rate-song', (req, res) => {
-    if (!req.body.filepath || !req.body.rating || !Number.isInteger(req.body.rating) || req.body.rating < 0 || req.body.rating > 10) {
+    if (!req.body.filepath || !Number.isInteger(req.body.rating) || req.body.rating < 0 || req.body.rating > 10) {
       return res.status(500).json({ error: 'Bad input data' });
     }
 

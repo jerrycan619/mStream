@@ -17,6 +17,10 @@ const allowedCommands = [
   'previous',
   'playPause',
   'addSong',
+  'setVolUp',
+  'setVolDown',
+  'seekForward',
+  'seekBack',
   'getPlaylist',
   'removeSong',
 ];
@@ -108,6 +112,7 @@ exports.setup = function (mstream, server, program) {
     clients[code] = connection;
     guests[guestcode] = code;
 
+
     // create JWT
     var token = false;
     if (req.jwt) {
@@ -162,6 +167,7 @@ exports.setup = function (mstream, server, program) {
   mstream.post('/jukebox/push-to-client', (req, res) => {
     var clientCode = req.body.code;
     const command = req.body.command;
+    const value = req.body.value;
 
     // Check that code exists
     if (!(clientCode in clients) && !(clientCode in guests)) {
@@ -192,10 +198,12 @@ exports.setup = function (mstream, server, program) {
     }
 
     // Push commands to client
-    clients[clientCode].send(JSON.stringify({ command: command, file: sendFile }));
+    clients[clientCode].send(JSON.stringify({ command: command, value: value, file: sendFile }));
 
     // Send confirmation back to user
     res.json({ status: 'done' });
+
+    
   });
 }
 

@@ -13,7 +13,9 @@
     "start": "node cli-boot-wrapper.js",
     "wizard": "node cli-boot-wrapper.js --wizard",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "compile:sass": "node-sass public/sass/main.scss public/css/desktop_style.css -w",
+    "compile:sass_mobile": "node-sass public/sass/mobile.scss public/css/mobile_style.css -w"
   },
   "repository": {
     "type": "git",
@@ -92,6 +94,7 @@
     "busboy": "^0.3.1",
     "colors": "^1.4.0",
     "commander": "^4.1.0",
+    "device-detector-js": "^2.2.1",
     "electron-updater": "^4.1.2",
     "express": "^4.17.1",
     "fast-xml-parser": "^3.16.0",
@@ -108,5 +111,8 @@
     "nanoid": "^2.1.9",
     "winston": "^3.2.1",
     "ws": "^7.2.1"
+  },
+  "devDependencies": {
+    "node-sass": "^4.14.1"
   }
 }

@@ -94,7 +94,6 @@
     "busboy": "^0.3.1",
     "colors": "^1.4.0",
     "commander": "^4.1.0",
-    "device-detector-js": "^2.2.1",
     "electron-updater": "^4.1.2",
     "express": "^4.17.1",
     "fast-xml-parser": "^3.16.0",

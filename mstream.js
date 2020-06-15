@@ -14,8 +14,6 @@ const defaults = require('./modules/defaults.js');
 const ddns = require('./modules/ddns');
 const federation = require('./modules/federation');
 
-express
-
 exports.serveIt = config => {
   const program = defaults.setup(config);
 

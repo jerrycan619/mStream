@@ -36,7 +36,7 @@ For more information about mStream checkout the original repository: https://git
 * extend jukebox more
 
 ## Install:
-To install this on an existing mStream server please got to: https://github.com/jerrycan619/mStream-themes
+To install this on an existing mStream server please go to: https://github.com/jerrycan619/mStream-themes
 <br/><br/>
 Dev. install:<br/>
 ```shell

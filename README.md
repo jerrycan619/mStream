@@ -24,7 +24,6 @@ For more information about mStream checkout the original repository: https://git
 * it's in daily usage by myself -> I fix bugs as soon as I see them
 * Feel free to open issues if you found a bug or have other UI improvement suggestions.
 
-
 ### TODO
 * fix sharing playlist
 * small position changes of some elements
@@ -36,6 +35,14 @@ For more information about mStream checkout the original repository: https://git
 * remove console.logs used for development
 * extend jukebox more
 
+## Install:
+To install this on an existing mStream server please got to: https://github.com/jerrycan619/mStream-themes
+<br/><br/>
+Dev. install:<br/>
+git clone -b interface --single-branch https://github.com/jerrycan619/mStream.git<br/>
+cd mStream<br/>
+npm install<br/>
+npm start<br/>
 
 ## Credits
 

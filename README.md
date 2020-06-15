@@ -21,7 +21,7 @@ For more information about mStream checkout the original repository: https://git
 ### Version: 0.1.0
 * Initial Release. Alpha testing stage.
 * expect Bug's, Glitches and more!
-* it's in daily usage by myself -> I fix bugs as soon as I see them
+* it's in daily usage by myself -> I fix bugs asap
 * Feel free to open issues if you found a bug or have other UI improvement suggestions.
 
 ### TODO

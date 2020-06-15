@@ -39,11 +39,12 @@ For more information about mStream checkout the original repository: https://git
 To install this on an existing mStream server please got to: https://github.com/jerrycan619/mStream-themes
 <br/><br/>
 Dev. install:<br/>
-git clone -b interface --single-branch https://github.com/jerrycan619/mStream.git<br/>
-cd mStream<br/>
-npm install<br/>
-npm start<br/>
-
+```shell
+git clone -b interface --single-branch https://github.com/jerrycan619/mStream.git
+cd mStream
+npm install
+npm start
+```
 ## Credits
 
 mStream is built on top some great open-source libraries:

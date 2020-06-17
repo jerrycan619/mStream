@@ -816,34 +816,6 @@
     display: none;
   }
   
-  #db-search {
-    width: 80%;
-    position: relative;
-    display: flex;
-    margin: 20px auto 0 auto;
-  }
-  
-  #search-term {
-    border: 3px solid #f60;
-    border-radius: 5px 0 0 5px;
-    background: transparent;
-    color: #fff;
-    font-family: "Oswald", sans-serif;
-    font-weight: normal;
-  }
-  
-  .searchButton {
-    width: 60px;
-    height: 37px;
-    border: 1px solid #f60;
-    background: #f60;
-    text-align: center;
-    color: #fff;
-    border-radius: 0 5px 5px 0;
-  
-    padding: 0;
-  }
-  
   #filelist>div:nth-child(odd)>.dirz,
   #search-results>div:nth-child(odd),
   #filelist>div:nth-child(odd)>.dirz+.song-button-box {
@@ -869,9 +841,9 @@
   }
   
   
-  #filelist input[type="checkbox"] {
-    display: none;
-  }
+  // #filelist input[type="checkbox"] {
+  //   display: none;
+  // }
   
   .jukebox-panel {
     text-align: center;
@@ -979,15 +951,6 @@
     font-size: 0.9rem;
   }
   
-  input:-webkit-autofill,
-  input:-webkit-autofill:hover,
-  input:-webkit-autofill:focus,
-  input:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 30px #000 inset !important;
-    color: #fff !important;
-    -webkit-text-fill-color: #fff !important;
-  }
-  
   body,html {
   background-image: url('../img/login_bg.jpg');
   /* Image license free from https://unsplash.com/ */
@@ -1087,12 +1050,12 @@
   }
 
   .filelist_wrapper {
-    -webkit-flex: 1 1 auto;
-    flex: 1 1 auto;
-    width: 100%;
-    height: 100%;
-    overflow-x: hidden;
-    min-height: 0px;
+    // -webkit-flex: 1 1 auto;
+    // flex: 1 1 auto;
+    // width: 100%;
+    // height: 100%;
+    // overflow: hidden;
+    // min-height: 0px;
   }
 
   .col_track_title {
@@ -1119,17 +1082,6 @@
 .sub_heading {
   display: block;
   font-size: 0.8rem;
-}
-
-.settings_box {
-  & .input_checkbox:checked + label {
-    background: #3a3938;
-  }
-  & .input_checkbox + label {
-    background: #262626;
-    padding: 0.5rem 2rem;
-    border-radius: 2rem;
-  }
 }
   
 //#################### Panel Resize Handle ####################
@@ -1195,4 +1147,8 @@
 /* Scrollbar */
 .simplebar-scrollbar::before {
   background-color: $scrollbar_handle !important;
+}
+
+.panel_one_name {
+  color: $font-color-primary-active;
 }

@@ -2,30 +2,53 @@ $searchDesktop_input_bg: #282828;
 $searchDesktop_checkbox_bg: #282828;
 $searchDesktop_checkbox_checked_bg: #535353;
 
-.search_page_wrapper {
+#db-search {
+    margin-bottom: 0.5rem;
 
-    & #db-search {
-        width: 100%;
-        position: relative;
+    & #filterString {
+        font-size: 0.8rem;
     }
-    
-    & #search-term {
-        border-radius: 5px 0 0 5px;
+
+    & #dbSearchForm {
+        width: 100%;
         background: $searchDesktop_input_bg;
-        color: $font-color-primary-active;
-        font-family: inherit;
-        font-size: 1.2rem;
-        width: 100%;
-        border: none;
-        padding: 0.2rem 1rem;
-    }
     
-    & .searchButton {
-        color: $font-color-primary;
-        border: none;
+        & input {
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            color: $font-color-primary-active;
+    
+            &:-webkit-autofill {
+                -webkit-box-shadow: 0 0 0 30px $searchDesktop_input_bg inset !important;
+                -webkit-text-fill-color: $font-color-primary-active !important;
+    
+                &:hover, &:focus, &:active {
+                    -webkit-box-shadow: 0 0 0 30px $searchDesktop_input_bg inset !important;
+                    -webkit-text-fill-color: $font-color-primary-active !important;
+                }
+            }
+        }
+    
+        & button {
+            background: transparent;
+            border: none;
+            color: $font-color-primary;
+            font-size: 1.5rem;
+    
+            &:hover {
+                color: $font-color-primary-active;
+                transform: scale(1.2);
+            }
+        }
+    
     }
+}
 
-    & .search_checkboxes {
+
+
+
+    .search_checkboxes {
         font-size: 0.8rem;
 
         & label {
@@ -42,4 +65,7 @@ $searchDesktop_checkbox_checked_bg: #535353;
             background: $searchDesktop_checkbox_checked_bg;
         }
     }
-}
+
+// .search_popover_wrapper .popover {
+//     top: 200px !important;
+// }

@@ -1173,6 +1173,9 @@ input:focus {
   .form__btn__icon {
     padding-left: 1rem; }
 
+.clusterize-scroll {
+  max-height: calc(100vh - 13rem) !important; }
+
 .player_bar_wrapper {
   grid-area: now-playing-bar;
   background-color: #282828;
@@ -1541,7 +1544,6 @@ input:focus {
   padding: 0.15rem 1rem;
   line-height: 2rem; }
   .settings_button:hover {
-    transform: scale(1.1);
     color: #fff; }
 
 #autoDjDirs {
@@ -1559,7 +1561,6 @@ input:focus {
   color: #b3b3b3;
   font-size: 2rem; }
   .link_button:hover {
-    transform: scale(1.1);
     text-decoration: none;
     color: #fff; }
 

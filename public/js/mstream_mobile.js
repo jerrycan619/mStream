@@ -23,7 +23,7 @@ var spinner1_html = '<div class="d-flex justify-content-center">' +
   
   function createFileplaylistHtml(dataDirectory) {
     return `<div class="col p-0 file_wrapper">
-              <div class="row mt-1 mb-1 ml-0 mr-0 align-items-center">
+              <div class="row mt-1 mb-1 ml-0 mr-0 overflow-hidden align-items-center">
                 <div class="col p-0">
                   <div data-directory="${dataDirectory}" class="fileplaylistz row align-items-center">
                     <div class="col-auto">
@@ -50,7 +50,7 @@ var spinner1_html = '<div class="d-flex justify-content-center">' +
   }
   
   function createMusicfileHtml(fileLocation, title, titleClass) {
-    return '<div class="row mt-1 mb-1 ml-0 mr-0 align-items-center">' +  
+    return '<div class="row mt-1 mb-1 ml-0 mr-0 overflow-hidden align-items-center">' +  
               '<div class="col p-0">' +
                 '<div data-file_location="' + fileLocation + '" class="filez row m-0 align-items-center">' + 
                   '<div class="col-auto pl-0">' +
@@ -319,6 +319,9 @@ var spinner1_html = '<div class="d-flex justify-content-center">' +
             $('#login_overlay').slideUp("slow");
             $('#main_content').removeClass("d-none");
             $('#main_content').addClass("d-block");
+
+            //Refresh slick because sometimes (on Firefox) it has a width of 0 after login
+            $('.track_info').slick("refresh");
           });
         }
       }
@@ -646,7 +649,7 @@ var spinner1_html = '<div class="d-flex justify-content-center">' +
       });
   
       // Post the html to the filelist div
-      $('#fillContent').html("<div data-simplebar class='col p-0 h-100'><div class='row m-0 flex-column flex-nowrap w-100'>" + filelist.join("") + "</div></div>");
+      $('#fillContent').html("<div data-simplebar class='col p-0 h-100 mh-100'><div class='row m-0 flex-column flex-nowrap w-100'>" + filelist.join("") + "</div></div>");
       
   
       if (previousState && previousState.previousScroll) {
@@ -779,7 +782,7 @@ var spinner1_html = '<div class="d-flex justify-content-center">' +
       });
   
       // Post the html to the filelist div
-      $('#fillContent').html("<div data-simplebar class='col p-0 h-100'><div class='row m-0 flex-column flex-nowrap w-100'>" + filelist.join("") + "</div></div>");
+      $('#fillContent').html("<div data-simplebar class='col p-0 h-100 mh-100'><div class='row m-0 flex-column flex-nowrap w-100'>" + filelist.join("") + "</div></div>");
       //ll.update();
     });
   
@@ -1193,7 +1196,7 @@ var spinner1_html = '<div class="d-flex justify-content-center">' +
 
         });
   
-        $('#fillContent').html("<div data-simplebar class='col p-0 h-100'><div class='row m-0 flex-column flex-nowrap w-100'>" + files.join("") + "</div></div>");
+        $('#fillContent').html("<div data-simplebar class='col p-0 h-100 mh-100'><div class='row m-0 flex-column flex-nowrap w-100'>" + files.join("") + "</div></div>");
         /*var clusterize = new Clusterize({
           rows: files,
           scrollId: 'scrollPlaylists',
@@ -1545,7 +1548,7 @@ var spinner1_html = '<div class="d-flex justify-content-center">' +
 
         });
   
-        $('#fillContent').html("<div data-simplebar class='col p-0 h-100'><div class='row m-0 flex-column flex-nowrap w-100'>" + filelist.join("") + "</div></div>");
+        $('#fillContent').html("<div data-simplebar class='col p-0 h-100 mh-100'><div class='row m-0 flex-column flex-nowrap w-100'>" + filelist.join("") + "</div></div>");
       });
     }
   
@@ -1674,7 +1677,7 @@ var spinner1_html = '<div class="d-flex justify-content-center">' +
           })
         });
   
-        $('#fillContent').html("<div data-simplebar class='col p-0 h-100'><div class='row m-0 flex-column flex-nowrap w-100'>" + albums.join("") + "</div></div>");
+        $('#fillContent').html("<div data-simplebar class='col p-0 h-100 mh-100'><div class='row m-0 flex-column flex-nowrap w-100'>" + albums.join("") + "</div></div>");
   
         if (previousState && previousState.previousScroll) {
           //$('#fillContent').scrollTop(previousState.previousScroll);
@@ -2082,9 +2085,9 @@ var spinner1_html = '<div class="d-flex justify-content-center">' +
                                   '<div>Transcode</div>' +
                               '</div>' +
                               '<div class="slides_system col p-0 overflow-hidden">' +
-                                  '<div data-simplebar id="getSettings" class="h-100 pl-3 pr-3"></div>' +
-                                  '<div data-simplebar id="getFederation" class="h-100 pl-3 pr-3"></div>' +
-                                  '<div data-simplebar id="getTranscode" class="h-100 pl-3 pr-3"></div>' +
+                                  '<div data-simplebar id="getSettings" class="mh-100 h-100 pl-3 pr-3"></div>' +
+                                  '<div data-simplebar id="getFederation" class="mh-100 h-100 pl-3 pr-3"></div>' +
+                                  '<div data-simplebar id="getTranscode" class="mh-100 h-100 pl-3 pr-3"></div>' +
                               '</div>');
 
       $('.slides_system').slick({
@@ -2156,7 +2159,7 @@ var spinner1_html = '<div class="d-flex justify-content-center">' +
                     <span class="sub_heading">Auto DJ randomly generates a playlist</span>\
                   </div>
                 </div>
-              </div>\
+              </div>
             </div>\
             <div class="row m-0">
               <div class="col pl-0">

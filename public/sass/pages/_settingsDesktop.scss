@@ -24,6 +24,17 @@
     }
 }
 
+#autoDjDirs {
+  height: 100%;
+  /* width: 3rem; */
+  font-size: 2rem;
+  color: $settings_button_color_primary;
+  line-height: 100%;
+  border: 1px solid $settings_button_border;
+  border-radius: 12rem;
+  background: $settings_button_bg;
+}
+
 .link_button {
     text-decoration: none;
     color: $settings_button_color_primary;
@@ -34,4 +45,24 @@
         text-decoration: none;
         color: $settings_button_color_hover;
     }
+}
+
+#autodj-ratings {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  margin-left: 10px;
+  max-width: calc(100% - 20px);
+  background: transparent;
+  color: #fff;
+  border: none;
+}
+
+#autodj-ratings option {
+  color: #000;
+}
+
+#autodj-ratings::-ms-expand {
+  display: none;
 }

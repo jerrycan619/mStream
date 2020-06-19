@@ -20,7 +20,7 @@
     line-height: 2rem;
 
     &:hover {
-        transform: scale(1.1);
+        //transform: scale(1.1);
         color: $settings_button_color_hover;
     }
 }
@@ -42,7 +42,7 @@
     font-size: 2rem;
 
     &:hover {
-        transform: scale(1.1);
+        //transform: scale(1.1);
         text-decoration: none;
         color: $settings_button_color_hover;
     }

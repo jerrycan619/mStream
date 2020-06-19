@@ -143,10 +143,7 @@
   }
   
   .fileplaylistz {
-    float: left;
-    position: relative;
-    overflow: visible;
-    padding: 10px;
+
   }
   
   // .playlistz {
@@ -236,8 +233,10 @@
   }
   
   #search_folders {
-    margin-top: 3px;
-    width: calc(100% - 99px);
+    width: 100%;
+    background: transparent;
+    color: #fff;
+    border: none;
   }
   
   #downform {
@@ -624,7 +623,7 @@
     line-height: 2rem;
 
     & .progress {
-      height: 2rem;
+      height: 100%;
       position: absolute;
       width: 100%;
       bottom: 0;
@@ -792,28 +791,6 @@
   
   input[name="autodj-folders"] {
     cursor: pointer;
-  }
-  
-  #autodj-ratings {
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
-    cursor: pointer;
-    margin-left: 10px;
-    max-width: calc(100% - 20px);
-    background: transparent;
-    color: #fff;
-    border: 1px solid #4f4f4f;
-    border-left: none;
-    border-right: none;
-  }
-  
-  #autodj-ratings option {
-    color: #000;
-  }
-  
-  #autodj-ratings::-ms-expand {
-    display: none;
   }
   
   #filelist>div:nth-child(odd)>.dirz,
@@ -1037,7 +1014,8 @@
   }
   
   .directoryName {
-  
+    display: block;
+    line-height: 1.2rem;
   }
   
   .backButton {
@@ -1105,7 +1083,7 @@
   & .dir_icon {
     font-size: 1.5rem;
     background: transparent;
-    width: 1.5rem;
+    width: 3rem;
     height: 1.5rem;
     text-align: center;
     border-radius: 3px;
@@ -1123,6 +1101,7 @@
     right: -9rem;
     top: 0;
     transition: right .3s ease;
+    cursor: pointer;
   }
 
   & .song-button-box.sbb_unfold {
@@ -1135,7 +1114,7 @@
   & .dir_icon {
     font-size: 1.5rem;
     background: transparent;
-    width: 1.5rem;
+    width: 3rem;
     height: 1.5rem;
     text-align: center;
     border-radius: 3px;

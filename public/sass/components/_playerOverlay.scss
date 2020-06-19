@@ -13,9 +13,13 @@ $player-overlay-bg2: #1f1f1f;
     }
 }
 
+
 .player_overlay_wrapper {
     background: $player-overlay-bg2;
     background: linear-gradient(0deg, $player-overlay-bg2 0%, $player-overlay-bg1 100%);
+    z-index: 1200;
+    position: relative;
+    overflow: hidden;
 
     & .player-overlay-header {
         height: 3rem;

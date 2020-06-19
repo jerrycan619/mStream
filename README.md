@@ -25,9 +25,11 @@ For more information about mStream checkout the original repository: https://git
 * Feel free to open issues if you found a bug or have other UI improvement suggestions.
 
 ### TODO
-* fix sharing playlist
+* fix/style sharing playlist
+* style jukebox
 * small position changes of some elements
 * get completely rid of izi
+* replace all popovers with bootstrap popovers
 * style all buttons
 * figure out a way to navigate back in albums / artists / playlists / search (only on mobile)
 * find the best style and place for every single thing, so expect moves of buttons, texts, icons, menus, etc.

@@ -85,6 +85,10 @@ exports.serveIt = config => {
     res.sendFile( 'shared_mobile.html', { root: program.webAppDirectory });
   });
   // Serve Jukebox Page
+  mstream.all('/remote', (req, res) => {
+    res.sendFile('remote.html', { root: program.webAppDirectory });
+  });
+
   mstream.all('/remote_desktop', (req, res) => {
     res.sendFile('remote_desktop.html', { root: program.webAppDirectory });
   });

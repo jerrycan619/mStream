@@ -13,7 +13,10 @@
         border-radius: 0;
         background: $mobilePlayer_bar_bg;
         z-index: 99;
-        position: relative;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
 
         & .progress-bar {
             background: $mobilePlayer_bar_progress_color;
@@ -74,14 +77,22 @@
     }
 
     & .player_controls {
-        position: absolute;
-        right: 0;
-        top: 0;
-        padding-right: 1rem;
+        // position: absolute;
+        // right: 0;
+        // top: 0;
+        // padding-right: 1rem;
 
         & .control_button {
             font-size: 2rem;
             line-height: $mobilePlayer_bar_height;
+            height: $mobilePlayer_bar_height;
+            width: $mobilePlayer_bar_height;
+        }
+        & .loading_button {
+            line-height: $mobilePlayer_bar_height;
+            height: $mobilePlayer_bar_height;
+            width: $mobilePlayer_bar_height;
+            text-align: center;
         }
     }
     

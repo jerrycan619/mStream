@@ -16,7 +16,6 @@ $color-grey-dark-2: #999;
     left: 0;
     top: 0;
     backface-visibility: hidden;
-    height: 20rem;
     transition: all .3s ease;
 
     .modal-header {
@@ -60,6 +59,7 @@ $color-grey-dark-2: #999;
     transform: rotateY(180deg);
 
     & .modal-header {
+        color: #000;
         & span {
             font-size: 1.5rem;
             margin: 0 auto;
@@ -68,7 +68,7 @@ $color-grey-dark-2: #999;
     }
     & .modal-body {
         & span {
-            font-size: 1.5rem;
+            //font-size: 1.5rem;
             display: block;
             text-align: center;
         }
@@ -127,12 +127,11 @@ $color-grey-dark-2: #999;
         text-align: center;
         display: block;
         margin: 0 auto;
-        width: 50%;
         font-size: 1.5rem;
         font-weight: 700;
 
         &__icon {
-            padding-left: 1rem;
+            //padding-left: 1rem;
         }
     }
   }

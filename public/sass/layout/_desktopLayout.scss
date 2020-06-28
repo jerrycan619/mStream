@@ -1131,3 +1131,12 @@
 .panel_one_name {
   color: $font-color-primary-active;
 }
+
+.header_button {
+  font-size: 1.75rem;
+  color: $font-color-primary;
+  &:hover {
+    cursor: pointer;
+    color: $font-color-primary-hover;
+  }
+}

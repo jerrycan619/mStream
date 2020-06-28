@@ -9,6 +9,15 @@ For more information about mStream checkout the original repository: https://git
 ## Mobile UI
 ![](/git_img/mobile.gif)
 
+### NEW!
+#### Basic File system manipulation [Experimental]
+* rename / move / create / delete directorys
+* rename / move / (edit meta mp3 only) / delete files
+* be sure to have a complete backup before using this!!!
+#### Online Radio [Experimental]
+* add live stream url(s) and play them in mStream
+* import / export stream ".pls" files
+
 ### Changes
 * removed inline CSS and sorted all styles in SASS (7in1 architecture) (WIP)
 * 2 complete new UI's. One for desktop usage, One for mobile usage

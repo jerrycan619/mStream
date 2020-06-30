@@ -1003,6 +1003,10 @@
   
   .navbar_icon {
     font-size: 1.5rem !important;
+    &:hover {
+      cursor: pointer;
+      color: $font-color-primary-hover;
+    }
   }
 
   .icon_normal {

@@ -27,6 +27,9 @@
         & .song-button-box {
             background: $nowPlaying_active_bg;
         }
-    }
+    } 
     
+    & #playlist {
+        overflow-x: hidden;
+    }
 }

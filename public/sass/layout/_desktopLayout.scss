@@ -1144,3 +1144,15 @@
     color: $font-color-primary-hover;
   }
 }
+
+.markArtist {
+
+  & .dir_icon {
+    background: rgba($explorerHighlightRow-color1, 0.4);
+  }  
+  
+  & .col_track_title,
+  & .col_track_artist {
+    color: $explorerHighlightRow-color1;
+  }
+}

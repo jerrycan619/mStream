@@ -192,14 +192,19 @@ exports.setup = function(mstream, program) {
     // loop through files
     for (let i = 0; i < files.length; i++) {
       try {
-        var stat = fs.statSync(fe.join(pathInfo.fullPath, files[i]));
+        var stat = fs.lstatSync(fe.join(pathInfo.fullPath, files[i])); //lstat Does not dereference symbolic links
       } catch (error) {
         // Bad file, ignore and continue
         continue;
       }
 
       // Handle Directories
-      if (stat.isDirectory()) {
+      if (stat.isSymbolicLink()) {
+        directories.push({
+          type: "symLink",
+          name: files[i]
+        });
+      } else if (stat.isDirectory()) {
         directories.push({
           type: "directory",
           name: files[i]

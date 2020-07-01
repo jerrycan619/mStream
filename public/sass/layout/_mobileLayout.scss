@@ -1283,6 +1283,10 @@ min-height: 0px;
 }
 
 .directoryName {
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  direction: rtl;
   display: block;
   line-height: 1.2rem;
 }
@@ -1302,5 +1306,17 @@ min-height: 0px;
   & .header_icon {
     font-size: 1.6rem;
     line-height: 2.5rem;
+  }
+}
+
+.markArtist {
+
+  & .dir_icon {
+    background: rgba($explorerHighlightRow-color1, 0.4);
+  }  
+  
+  & .col_track_title,
+  & .col_track_artist {
+    color: $explorerHighlightRow-color1;
   }
 }

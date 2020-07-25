@@ -1156,3 +1156,26 @@
     color: $explorerHighlightRow-color1;
   }
 }
+
+.smallIcon {
+  font-size: 1.3rem;
+  &:hover {
+    cursor: pointer;
+    color: $font-color-primary-hover;
+  }
+}
+
+.vert_text_scroll {
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  direction: rtl;
+  display: block;
+
+  //Hide Scrollbar
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

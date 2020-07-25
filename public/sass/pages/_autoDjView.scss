@@ -1,0 +1,44 @@
+.autoDjViewList {
+    & .card {
+        background: $autoDjViewList-bgcolor1;
+
+        & .card-header {
+            background: $autoDjViewList-bgcolor2;
+
+            & button {
+                color: $font-color-primary;
+                text-align: left;
+
+                &:hover {
+                    color: $font-color-primary-hover;
+                }
+            }
+        }
+
+        & .card-body > .row {
+            height: 2.2rem;
+            line-height: 2.2rem;
+
+            &:nth-child(even) {
+                background: $autoDjViewList-evenRowBg;
+            }
+        }
+    }
+}
+
+#includeAutoDjCatUl {
+    background: rgba($main_bg_color, .5);
+    margin-bottom: 1rem;
+
+    & .list-group-item {
+        font-size: 1.2rem;
+        border-color: rgba($font-color-primary-hover, .5);
+
+        & .removeCatFromIncludedCats {
+            &:hover {
+                cursor: pointer;
+                color: $font-color-primary-hover;
+            }
+        }
+    }
+}

@@ -1138,7 +1138,7 @@ min-height: 0px;
     transform: translate3d(0px, 0px, 0px) !important;
     display: flex !important;
     flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: space-between;
     width: 100% !important;
   }
@@ -1239,12 +1239,12 @@ min-height: 0px;
   & .song-button-box {
     font-size: 2rem;
     margin: 0;
-    width: 12rem;
+    width: 14rem;
     height: 100%;
     overflow: hidden;
     background: $color-primary;
     position: absolute;
-    right: -9rem;
+    right: -11rem;
     top: 0;
     transition: right .3s ease;
   }
@@ -1283,11 +1283,6 @@ min-height: 0px;
 }
 
 .directoryName {
-  white-space: nowrap;
-  overflow-x: auto;
-  overflow-y: hidden;
-  direction: rtl;
-  display: block;
   line-height: 1.2rem;
 }
 
@@ -1319,4 +1314,12 @@ min-height: 0px;
   & .col_track_artist {
     color: $explorerHighlightRow-color1;
   }
+}
+
+.vert_text_scroll {
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  direction: rtl;
+  display: block;
 }

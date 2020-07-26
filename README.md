@@ -18,6 +18,11 @@ For more information about mStream checkout the original repository: https://git
 * add live stream url(s) and play them in mStream
 * import / export stream ".pls" files
 
+#### AutoDj Rework [Experimental]
+* add categories
+* add directories / files from file explorer to this categories
+* choose which categories should be included for autodj
+
 ### Changes
 * removed inline CSS and sorted all styles in SASS (7in1 architecture) (WIP)
 * 2 complete new UI's. One for desktop usage, One for mobile usage

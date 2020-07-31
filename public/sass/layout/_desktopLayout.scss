@@ -111,6 +111,7 @@
   .dirz,
   .back,
   .artistz,
+  .fileplaylistz,
   .albumz,
   .playlist_row_container,
   .playlist-item,
@@ -121,7 +122,7 @@
     color: $font-color-primary;
     font-size: 1rem;
     font-weight: 400;
-    border-image: linear-gradient(to right, #2f2f2f, rgba(34, 34, 34, 0)) 1;
+    border-image: linear-gradient(to left, #2f2f2f, rgba(34, 34, 34, 0)) 1;
     border-width: 1px;
     border-style: solid;
     border-top: 0;
@@ -131,9 +132,11 @@
   
   .filez:hover,
   .back:hover,
+  .dirz:hover,
+  .fileplaylistz:hover,
   .artistz:hover,
   .playlistz:hover {
-    background-color: $desktop_file_hover_bg;
+    //background-color: $desktop_file_hover_bg;
     color: $font-color-primary-hover;
   }
   
@@ -206,18 +209,6 @@
     content: "";
     display: block;
     clear: both;
-  }
-  
-  /*.dirz:hover,*/
-  .albumz:hover,
-  .artistz:hover,
-  .playlistz:hover,
-  .fileplaylistz:hover {
-    background-color: #181818 !important;
-  }
-  
-  .back:hover {
-    background-color: #181818 !important;
   }
   
   .add_all {
